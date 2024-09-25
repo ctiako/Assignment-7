@@ -13,17 +13,17 @@ pyDatalog.create_terms('subject, completed, graduated, load_course_catalog, asse
 def load_course_catalog():
     """Asserts all knowledge of classes and their respective subjects."""
     # Assert courses and their respective subjects
-    subject('cs101', 'STEM')
-    subject('mat167', 'STEM')
-    subject('art310', 'Humanities')
-    subject('eng101', 'Humanities')
-    subject('his110', 'Social Science')
-    subject('psy150', 'Social Science')
+    +subject('cs101', 'STEM')
+    +subject('mat167', 'STEM')
+    +subject('art310', 'Humanities')
+    +subject('eng101', 'Humanities')
+    +subject('his110', 'Social Science')
+    +subject('psy150', 'Social Science')
 
 # 2. Assert that a student has completed a specified course
 def assert_student_completed_class(studentid, courseid):
     """Asserts that the specified student has completed the specified course."""
-    completed(studentid, courseid)
+    +completed(studentid, courseid)
 
 # 3. Load graduation rules to determine if a student has graduated
 def load_graduation_rules():
@@ -95,3 +95,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
