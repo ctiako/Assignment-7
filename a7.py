@@ -84,11 +84,11 @@ def main():
 if __name__ == '__main__':
     main()
 
-Output:
+#Output:
     
-Student s001 did graduate.
-Student s002 did graduate.
-Student s003 did not graduate.
-Student s004 did graduate.
-Graduating students: {'s001', 's002', 's004'}
+#Student s001 did graduate.
+#Student s002 did graduate.
+#Student s003 did not graduate.
+#Student s004 did graduate.
+#Graduating students: {'s001', 's002', 's004'}
 
