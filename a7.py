@@ -1,83 +1,79 @@
 # CS305 Park University
 # Assignment #7 Solution Code
 # Datalog
+# By Cyrille Tekam Tiako
+# 25 Sep 2024
 
 from pyDatalog import pyDatalog
 
-# In this assignment you will do some simple knowledge representation
-# and reasoning within datalog within Python. The domain you will be
-# working within will be academic degree program requirements checking.
+# Initialize pyDatalog and define necessary terms
+pyDatalog.create_terms('subject, completed, graduated, load_course_catalog, assert_student_completed_class, load_graduation_rules, ask_if_graduated, find_graduates')
 
-# 1.
-# TODO: complete the definition of the load_course_catalog function.
-# This function should assert facts for which courses teach which
-# subjects. You *MUST* use the predicate name 'subject' with the
-# first argument being the literal name of the class and the second
-# being the literal name of the subject for the tests to pass.
-#
-# assert the following information:
-# 1. cs101 is a stem class
-# 2. mat167 is a stem class
-# 3. art310 is a humanities class
-# 4. eng101 is a humanities class
-# 5. his110 is a social science class
-# 6. psy150 is a social science class
+# 1. Load course catalog with subjects
 def load_course_catalog():
-    """asserts all knowledge of classes and their subjects"""
-    pass
+    """Asserts all knowledge of classes and their respective subjects."""
+    # Assert courses and their respective subjects
+    subject('cs101', 'STEM')
+    subject('mat167', 'STEM')
+    subject('art310', 'Humanities')
+    subject('eng101', 'Humanities')
+    subject('his110', 'Social Science')
+    subject('psy150', 'Social Science')
 
-# 2.
-# TODO: implement assert_student_completed_class. It is up to you
-# how you represent this knowledge in datalog. Student id's will be
-# literals. 
+# 2. Assert that a student has completed a specified course
 def assert_student_completed_class(studentid, courseid):
-    """asserts that the specified student has completed the specified course"""
-    pass
+    """Asserts that the specified student has completed the specified course."""
+    completed(studentid, courseid)
 
-# 3.
-# TODO: implement load_graduation_rules. This function should simply
-# make one call to pyDatalog.load. This call should contain all needed
-# clauses (only 1 is necessary) to ensure any student that has met the
-# graduation requirements will be considered a graduate (in queries).
-# The graduation requirements are simply that a student has taken at
-# least one course from each of the available subjects. It is up to
-# you how to implement these clauses.
+# 3. Load graduation rules to determine if a student has graduated
 def load_graduation_rules():
-    """loads rules for determining if a student has graduated"""
-    pass
+    """Loads rules for determining if a student has graduated."""
+    # A student graduates if they have completed at least one course from each subject
+    pyDatalog.load("""
+    graduated(Student) <- completed(Student, Course) & subject(Course, Subject) &
+                           (Subject == 'STEM' | Subject == 'Humanities' | Subject == 'Social Science')
+    """)
 
-# 4.
-# TODO: return the results of a call to pyDatalog.ask. Form a
-# query that determines if the student graduated or not. 
+# 4. Determine if the given student has graduated
 def ask_if_graduated(studentid):
-    """determines if the given student has graduated or not"""
-    pass
+    """Determines if the given student has graduated or not."""
+    return graduated(studentid)
 
-# 5. complete the definition of find_graduates below.
+# 5. Find all graduating students
 def find_graduates():
+    """Returns a set of all students who have graduated."""
     res = set()
-    ans = None
-    #TODO: put your datalog query in the string on the next line to find all graduates
-    #ans = pyDatalog.ask("REPLACE-ME")
+    ans = pyDatalog.ask("graduated(X)")
     if ans:
         for t in ans.answers:
             res.add(t[0])
     return res
 
-
 def main():
-    assert_student_completed_class('s001', 'psy150')
-    assert_student_completed_class('s001', 'eng101')
-    assert_student_completed_class('s001', 'mat167')
-    assert_student_completed_class('s001', 'cs101')
-    assert_student_completed_class('s002', 'psy150')
-    assert_student_completed_class('s002', 'his101')
-    assert_student_completed_class('s002', 'cs101')
-    assert_student_completed_class('s002', 'mat167')
+    # Student course completions for various students
+    assert_student_completed_class('s001', 'psy150')  # Completed Social Science
+    assert_student_completed_class('s001', 'eng101')   # Completed Humanities
+    assert_student_completed_class('s001', 'mat167')   # Completed STEM
+    assert_student_completed_class('s001', 'cs101')    # Completed STEM
 
+    assert_student_completed_class('s002', 'psy150')   # Completed Social Science
+    assert_student_completed_class('s002', 'his110')   # Completed Social Science
+    assert_student_completed_class('s002', 'cs101')    # Completed STEM
+    assert_student_completed_class('s002', 'mat167')   # Completed STEM
+
+    assert_student_completed_class('s003', 'art310')   # Completed Humanities
+    assert_student_completed_class('s003', 'eng101')    # Completed Humanities
+
+    assert_student_completed_class('s004', 'his110')   # Completed Social Science
+    assert_student_completed_class('s004', 'psy150')   # Completed Social Science
+    assert_student_completed_class('s004', 'cs101')    # Completed STEM
+    assert_student_completed_class('s004', 'mat167')   # Completed STEM
+
+    # Load course catalog and graduation rules
     load_course_catalog()
     load_graduation_rules()
-    
+
+    # Check graduation status for students
     print('Student s001 did ' +
           ('' if ask_if_graduated('s001') else 'not ') +
           'graduate.')
@@ -86,15 +82,16 @@ def main():
           ('' if ask_if_graduated('s002') else 'not ') +
           'graduate.')
     
-    # 6. 
-    # If you completed everything correctly, you should see that
-    # s001 graduated and s002 did not.
-    # TODO: add a few more students, some that have graduated and
-    # some that have not. Feel free to add additional courses as
-    # well. 
+    print('Student s003 did ' +
+          ('' if ask_if_graduated('s003') else 'not ') +
+          'graduate.')
+    
+    print('Student s004 did ' +
+          ('' if ask_if_graduated('s004') else 'not ') +
+          'graduate.')
+
+    # List graduating students
     print('Graduating students:', find_graduates())
-    
-    
-  
+
 if __name__ == '__main__':
-  main()
+    main()
